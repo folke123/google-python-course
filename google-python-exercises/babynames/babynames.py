@@ -75,8 +75,17 @@ def main():
     summary = True
     del args[0]
 
-  for filename in args:
-  	print "\n".join(extract_names(filename)) + "\n"
+
+  if summary:
+	for filename in args:
+  		text = "\n".join(extract_names(filename)) + "\n"
+  		f = open(filename+".summary","w")
+  		f.write(text)
+
+
+  else:
+  	for filename in args:
+  		print "\n".join(extract_names(filename)) + "\n"
 
   # +++your code here+++
   # For each filename, get the names, then either print the text output
