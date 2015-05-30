@@ -18,6 +18,16 @@ import commands
 # +++your code here+++
 # Write functions and modify main() to call them
 
+def move_to_dir(to_dir,from_dirs):
+
+	to_path = os.path.abspath(to_dir)
+	for directory in from_dirs:
+		files = os.listdir(directory)
+		for file in files:
+			match = re.serach(r"___(\w+)___",file)
+			if match:
+				file_path = os.path.join(directory, file)
+				shutil.copy2(file_path, to_path)
 
 
 def main():
@@ -48,6 +58,8 @@ def main():
     print "error: must specify one or more dirs"
     sys.exit(1)
 
+  if todir:
+ 	move_to_dir(todir,args)
   # +++your code here+++
   # Call your functions
   
