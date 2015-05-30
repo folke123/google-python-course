@@ -10,7 +10,7 @@ import os
 import re
 import sys
 import urllib
-
+import urlparse
 """Logpuzzle exercise
 Given an apache logfile, find the puzzle urls and download the images.
 
@@ -24,7 +24,29 @@ def read_urls(filename):
   extracting the hostname from the filename itself.
   Screens out duplicate urls and returns the urls sorted into
   increasing order."""
-  # +++your code here+++
+  splitted_filename = filename.split("_")
+  server_path = "http://"+splitted_filename[1]
+
+
+  file = open(filename,"r")
+  urls = re.findall(r"GET\s(\S*puzzle\S*)\sHTTP",file.read())
+  urls = list(set(urls))
+
+  full_urls = []
+  for url in urls:
+    full_urls.append(urlparse.urljoin(server_path,url))
+
+
+  return sorted(full_urls,key=second_word)
+
+
+def second_word(url):
+  match = re.search(r"-\w+-(\w+)\.jpg",url)
+  if match:
+    return match.group(1)
+  else:
+    return url
+
   
 
 def download_images(img_urls, dest_dir):
@@ -35,8 +57,21 @@ def download_images(img_urls, dest_dir):
   with an img tag to show each local image file.
   Creates the directory if necessary.
   """
-  # +++your code here+++
-  
+  if not os.path.exists(dest_dir):
+    os.mkdir(dest_dir)
+
+  html = "<html><body>"
+  for index, url in enumerate(img_urls):
+    print "retriving: ", url
+    urllib.urlretrieve(url,dest_dir+"\\"+"img"+str(index))
+    html = html +"<img src=\"img"+str(index)+"\">"
+
+  html = html + "</body></html>"
+
+  index_file = open(dest_dir+"\\"+"index.html","w")
+
+  index_file.write(html)
+  index_file.close()
 
 def main():
   args = sys.argv[1:]

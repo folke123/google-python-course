@@ -42,10 +42,12 @@ def extract_names(filename):
   """
   f = open(filename,"r")
   text = f.read()
+
   match = re.search(r'h3 align="center">Popularity in (\d*)',text)
   year = match.group(1)
 
   name_ranks = re.findall(r'<tr align="right"><td>(\d*)</td><td>(\w*)</td><td>(\w*)</td>',text)
+  
   name_dict = {}
   for name_rank in name_ranks:
   	name_dict[name_rank[1]] = name_rank[0]
